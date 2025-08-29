@@ -3,23 +3,25 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function LoginUser() {
-    const [correo, setCorreo] = useState('');
-    const [contrasena, setContrasena] = useState('');
-    const [error, setError] = useState(''); // Estado para manejar errores
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password,setPassword] = useState(''); // Estado para manejar errores
+    const [rol] = useState(''); // Estado para manejar errores
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
     const validateUser = async (event) => {
         event.preventDefault();
+
         setError(''); // Limpiar errores previos
 
         try {
-            const response = await fetch('https://sommer-back-steel.vercel.app/api/chat/login', {
-            //const response = await fetch('http://localhost:5000/api/chat/login', {
+            const response = await fetch('https://libreria-back-vert.vercel.app/api/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ correo, contrasena }),
+                body: JSON.stringify({ email, password}),
             });
 
             const data = await response.json();
@@ -32,12 +34,12 @@ function LoginUser() {
                 // Guardar datos del usuario en localStorage
                 localStorage.setItem('usuario', JSON.stringify({
                     id: data.user._id, //se caputa el ID de la persona
-                    nombre: data.user.nombre,
-                    correo: data.user.correo
+                    name: data.user.name,
+                    email: data.user.email
                 }));
 
                 // Redirigir según el rol
-                navigate(data.user.rol === 'usuario' ? "/userHome" : "/adminHome");
+                navigate("/createSale");
             } 
         } catch (error) {
             console.error('Error:', error);
@@ -50,10 +52,10 @@ function LoginUser() {
             <h1 id="txtBienvenida">Inicio de sesión</h1>
 
             <h4 className="txt">Correo:</h4>
-            <input type="text" className="entry" value={correo} onChange={(e) => setCorreo(e.target.value)} required /><br />
+            <input type="text" className="entry" value={email} onChange={(e) => setEmail(e.target.value)} required /><br />
 
             <h4 className="txt">Contraseña:</h4>
-            <input type="password" className="entry" value={contrasena} onChange={(e) => setContrasena(e.target.value)} required /><br />
+            <input type="password" className="entry" value={password} onChange={(e) => setPassword(e.target.value)} required /><br />
             
             {error && <p style={{ color: 'red' }}>{error}</p>} {/* Mensaje de error en pantalla */}
 
