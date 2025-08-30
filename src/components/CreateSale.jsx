@@ -1,12 +1,15 @@
 import './styles/CreateSale.css';
+import './Form.jsx'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function CreateSale() {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const id_vendedor = usuario?.id || ''; // por si no existe
     const [producto, setProducto] = useState('');
     const [cantidad, setCantidad] = useState('');
-    const [preciounitario, setPreciounitario] = useState('');
+    const [precioUnitario, setPrecioUnitario] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -16,19 +19,22 @@ function CreateSale() {
         event.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
-
+        
         try {
-            const response = await axios.post('https://libreria-back-vert.vercel.app/api/newventa', {
+            const response = await axios.post('https://libreria-back-vert.vercel.app/api/newVenta', {
                 producto,
                 cantidad,
-                preciounitario
+                precioUnitario,
+                id_vendedor
             });
 
-            if (response.data.success) {
-                setSuccessMessage('Venta creada exitosamente');
-            } else {
-                setErrorMessage(response.data.message || 'Error en la creación de la venta');
-            }
+            // Detectamos éxito si hay un _id en la respuesta
+        if (response.data && response.success) {
+            setSuccessMessage('Venta creada exitosamente');
+        } else {
+            setErrorMessage(response.data.message || 'Error en la creación de la venta');
+        }
+
         } catch (error) {
             console.error('Error:', error);
             setErrorMessage('Error en la solicitud: ' + error.message);
@@ -50,7 +56,7 @@ function CreateSale() {
                         />                                                
                         <div className="cantidad">
                             <input
-                                type="text"
+                                type="number"
                                 id="inputCantidad"
                                 placeholder="cantidad"
                                 onChange={(e) => setCantidad(e.target.value)}
@@ -62,7 +68,7 @@ function CreateSale() {
                                 type={"number"}
                                 id="inputPrice"
                                 placeholder="Precio"
-                                onChange={(e) => setPreciounitario(e.target.value)}
+                                onChange={(e) => setPrecioUnitario(e.target.value)}
                                 required
                             />
                         </div>
