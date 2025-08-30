@@ -7,6 +7,7 @@ import axios from 'axios';
 function CreateSale() {
     const usuario = JSON.parse(localStorage.getItem('usuario'));
     const id_vendedor = usuario?.id || ''; // por si no existe
+    const name_vendedor = usuario?.name || '';
     const [producto, setProducto] = useState('');
     const [cantidad, setCantidad] = useState('');
     const [precioUnitario, setPrecioUnitario] = useState('');
@@ -25,15 +26,18 @@ function CreateSale() {
                 producto,
                 cantidad,
                 precioUnitario,
-                id_vendedor
+                id_vendedor,
+                name_vendedor
             });
 
-            // Detectamos éxito si hay un _id en la respuesta
-        if (response.data && response.success) {
+        if (response.data && response.data.success) {
             setSuccessMessage('Venta creada exitosamente');
+            setErrorMessage(''); // Limpia cualquier error anterior
         } else {
             setErrorMessage(response.data.message || 'Error en la creación de la venta');
+            setSuccessMessage(''); // Limpia cualquier éxito anterior
         }
+
 
         } catch (error) {
             console.error('Error:', error);
