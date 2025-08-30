@@ -19,6 +19,11 @@ function CreateSale() {
         event.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
+        // Validaciones adicionales en JavaScript
+        if (Number(cantidad) <= 0 || Number(precioUnitario) <= 0) {
+            setErrorMessage('La cantidad y el precio deben ser mayores que cero.');
+            return;
+        }
         
         try {
             const response = await axios.post('https://libreria-back-vert.vercel.app/api/newVenta', {
