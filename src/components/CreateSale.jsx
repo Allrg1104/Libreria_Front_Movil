@@ -1,5 +1,4 @@
 import './styles/CreateSale.css';
-import './Form.jsx'
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -36,7 +35,7 @@ function CreateSale() {
         } else {
             setErrorMessage(response.data.message || 'Error en la creación de la venta');
             setSuccessMessage(''); // Limpia cualquier éxito anterior
-        }
+    }
 
 
         } catch (error) {
